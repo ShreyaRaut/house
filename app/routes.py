@@ -64,7 +64,7 @@ def aadhar():
         return redirect(url_for('home'))
     else:
         print(form.errors)
-    return render_template('aadhar.html', title='Aadhar', form=form)
+    return render_template('aadhar.html', title='aadhar', form=form)
 
 @app.route("/logout")
 def logout():
@@ -75,6 +75,7 @@ def logout():
 @app.route("/uploadaadhar",methods=['GET','POST'])
 def uploadaadhar():
     form=UploadAadharForm()
+    form1=AadharForm()
     if form.validate_on_submit():
         f=form.photo.data
         filename=secure_filename(f.filename)
@@ -82,6 +83,8 @@ def uploadaadhar():
 
 
         Name,Middle_Name,Surname,bdate,Gender,aadnum=ado.scan(f.filename)
+        print(""+Name)
+        print(""+bdate)
         # form1=AadharForm()
         # print("hi fname"+form1.fname.data)
         # form1.current_user.fname=Name
@@ -90,7 +93,7 @@ def uploadaadhar():
         # form1.birthday.data=bdate
         # form1.gender.data=Gender
         # form1.adno.data=aadnum
-        return render_template('aadhar.html',fname=Name,mname=Middle_Name,lname=Surname,birthday=bdate,gender=Gender,adno=aadnum)
+        return render_template('aadhar.html',fname=Name,mname=Middle_Name,lname=Surname,birthday=bdate,gender=Gender,adno=aadnum,form=form1)
     else:
         print(form.errors)
 
