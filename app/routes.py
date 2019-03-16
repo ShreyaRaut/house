@@ -2,8 +2,7 @@ from flask import Flask,render_template,request,session,logging,url_for,redirect
 from app import app, db, bcrypt
 from app.forms import RegistrationForm,LoginForm,AadharForm
 from app.models import User
-from flask_login import login_user,current_user
-
+from flask_login import login_user,current_user,logout_user
 
 @app.route("/")
 @app.route("/home")
@@ -18,15 +17,13 @@ def about():
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
         hash=bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user=User(fname=form.fname.data,mname=form.mname.data,lname=form.lname.data,mobile=form.mobile.data,email=form.email.data,password=hash)
+        user=User(username=form.username.data,fname=form.fname.data,mname=form.mname.data,lname=form.lname.data,mobile=form.mobile.data,email=form.email.data,password=hash)
         db.session.add(user)
         db.session.commit()
-        flash(f'Account created successfully {form.fname.data}!', 'success')
+        flash(f'Account created successfully {form.username.data}!', 'success')
         return redirect(url_for('login'))
     else:
         print(form.errors)
@@ -35,11 +32,9 @@ def register():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
-        user=User.query.filter_by(email=form.email.data).first()
+        user=User.query.filter_by(username=form.username.data).first()
         if user and bcrypt.check_password_hash(user.password,form.password.data):
             login_user(user,remember=form.remember.data)
             flash('You have been logged in!', 'success')
@@ -58,5 +53,11 @@ def aadhar():
     else:
         print(form.errors)
     return render_template('aadhar.html', title='Aadhar', form=form)
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
 
 
