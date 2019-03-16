@@ -1,8 +1,9 @@
 from flask import Flask,render_template,request,session,logging,url_for,redirect,flash
 from app import app, db, bcrypt
-from app.forms import RegistrationForm,LoginForm,AadharForm
+from app.forms import RegistrationForm,LoginForm,AadharForm,UploadAadharForm
 from app.models import User
-from flask_login import login_user,current_user,logout_user
+from flask_login import login_user,current_user,logout_user,login_required
+import app.mod_ocr.aad_ocr as ado
 
 @app.route("/")
 @app.route("/home")
@@ -58,6 +59,27 @@ def aadhar():
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+@login_required
+@app.route("/uploadaadhar",methods=['GET','POST'])
+def uploadaadhar():
+    form=UploadAadharForm()
+    if form.validate_on_submit():
+        Name,Middle_Name,Surname,bdate,Gender,aadnum=ado.scan(form.aadimage.data)
+        form1=AadharForm()
+        form1.fname.data=Name
+        form1.mname.data=Middle_Name
+        form1.lname.data=Surname
+        form1.birthday.data=bdate
+        form1.gender.data=Gender
+        form1.adno.data=aadnum
+
+        return render_template('aadhar.html',title='Aadhar',form=form1)
+    else:
+        flash('Please upload a valid image')
+    return render_template('uploadaadhar.html',title='UploadAadhar',form=form)
+
+
 
 @app.route("/pancard",methods=['GET','POST'])
 def pancard():

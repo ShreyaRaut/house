@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField,ValidationError,IntegerField,DateTimeField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from app.models import User
+from flask_wtf.file import FileField,FileRequired
 import phonenumbers
 
 class RegistrationForm(FlaskForm):
@@ -31,12 +32,16 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
 
+class UploadAadharForm(FlaskForm):
+    aadimage=FileField(validators=[FileRequired()])
+    submit = SubmitField('Upload')
 
 class AadharForm(FlaskForm):
     fname = StringField('First Name',validators=[DataRequired(), Length(min=2, max=20)])
     mname = StringField('Middle Name',validators=[Length(min=2, max=20)])
     lname = StringField('Last name',validators=[Length(min=2, max=20)])
-    address=StringField('Address',validators=[Length(min=5,max=100)])
+    #address=StringField('Address',validators=[Length(min=5,max=100)])
+    gender = StringField('Gender',validators=[Length(min=4, max=6)])
     birthday= DateTimeField('Date of Birth', format='%d/%m/%yy')
     adno=StringField('Aadhar No',validators=[DataRequired(),Length(min=12,max=12)])
     submit = SubmitField('Submit')

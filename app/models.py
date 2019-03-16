@@ -1,5 +1,6 @@
 from app import db,login_manager
 from flask_login import UserMixin
+from sqlalchemy import ForeignKey
 
 
 @login_manager.user_loader
@@ -22,13 +23,13 @@ class User(db.Model,UserMixin):
 
 
 class Aadhar(db.Model,UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer,db.ForeignKey('user.id'),nullable=False)
     fname=db.Column(db.String(20),nullable=False)
     mname=db.Column(db.String(20))
     lname=db.Column(db.String(20),nullable=False)
     address=db.Column(db.String(100),nullable=False)
     birthday=db.Column(db.DateTime,nullable=False)
-    adno=db.Column(db.String(12),nullable=False)
+    adno=db.Column(db.String(12),nullable=False,primary_key=True)
 
 
     def __repr__(self):
