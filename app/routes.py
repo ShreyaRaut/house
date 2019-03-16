@@ -59,5 +59,44 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+@app.route("/pancard",methods=['GET','POST'])
+def pancard():
+    form = PanForm() 
+    if form.validate_on_submit():
+        flash(f'kyc done successfully {form.fname.data}!', 'success')
+        return redirect(url_for('home'))
+    else:
+        print(form.errors)
+    return render_template('pancard.html', title='PanCard', form=form)
 
+@app.route("/voterid",methods=['GET','POST'])
+def voter():
+    form = VoterForm() 
+    if form.validate_on_submit():
+        flash(f'kyc done successfully {form.fname.data}!', 'success')
+        return redirect(url_for('home'))
+    else:
+        print(form.errors)
+    return render_template('voterid.html', title='VoterID', form=form)
+
+
+@app.route("/drivinglicense",methods=['GET','POST'])
+def driver():
+    form = DriverForm() 
+    if form.validate_on_submit():
+        flash(f'kyc done successfully {form.fname.data}!', 'success')
+        return redirect(url_for('home'))
+    else:
+        print(form.errors)
+    return render_template('driving.html', title='DrivingLicense', form=form)
+
+@app.route("/passport",methods=['GET','POST'])
+def passport():
+    form = PassportForm() 
+    if form.validate_on_submit():
+        flash(f'kyc done successfully {form.fname.data}!', 'success')
+        return redirect(url_for('home'))
+    else:
+        print(form.errors)
+    return render_template('passport.html', title='Passport', form=form)
 
