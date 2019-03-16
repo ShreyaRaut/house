@@ -8,6 +8,8 @@ from matplotlib import pyplot as plt
 from skimage.filters.rank import median
 from skimage.morphology import disk
 from ..models import User
+from ..forms import RegistrationForm
+from flask_login import current_user
 
 
 def scan(file):
@@ -120,17 +122,20 @@ def scan(file):
     aadnum=' '.join(aad)
 
     #Store Name,Middle name,Last name
-    name=User.fname
+
+    name=current_user.fname
     name_index=text.index(name)
     i=name_index
     Name=text[i]
     Middle_Name=text[i+1]
     Surname=text[i+1]
 
+    print("Aadhar number:"+aadnum)
+    print('Birthday:'+bdate)
+    print('Name:'+Name)
+    print('Middle name:'+Middle_Name)
+    print('Surname:'+Surname)
+    print('Gender:'+Gender)
+
     return Name,Middle_Name,Surname,bdate,Gender,aadnum
-    # print("Aadhar number:"+aadnum)
-    # print('Birthday:'+bdate)
-    # print('Name:'+Name)
-    # print('Middle name:'+Middle_Name)
-    # print('Surname:'+Surname)
-    # print('Gender:'+Gender)
+    

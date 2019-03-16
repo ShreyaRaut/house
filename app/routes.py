@@ -4,6 +4,14 @@ from app.forms import RegistrationForm,LoginForm,AadharForm,UploadAadharForm
 from app.models import User
 from flask_login import login_user,current_user,logout_user,login_required
 import app.mod_ocr.aad_ocr as ado
+import os
+from werkzeug import secure_filename
+
+
+# APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+# UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static/uploads')
+UPLOAD_FOLDER = os.path.basename('./uploads/')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route("/")
 @app.route("/home")
@@ -16,7 +24,7 @@ def about():
     return render_template('about.html', title='About')
 
 
-@app.route("/register", methods=['GET', 'POST'])
+@app.route("/register", methods=['GET','POST'])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -49,6 +57,9 @@ def login():
 def aadhar():
     form = AadharForm() 
     if form.validate_on_submit():
+        # user=Aadhar(fname=form.fname.data,mname=form.mname.data,lname=form.lname.data,mobile=form.mobile.data,email=form)
+        # db.session.add(user)
+        # db.session.commit()
         flash(f'kyc done successfully {form.fname.data}!', 'success')
         return redirect(url_for('home'))
     else:
@@ -65,60 +76,66 @@ def logout():
 def uploadaadhar():
     form=UploadAadharForm()
     if form.validate_on_submit():
-        Name,Middle_Name,Surname,bdate,Gender,aadnum=ado.scan(form.aadimage.data)
-        form1=AadharForm()
-        form1.fname.data=Name
-        form1.mname.data=Middle_Name
-        form1.lname.data=Surname
-        form1.birthday.data=bdate
-        form1.gender.data=Gender
-        form1.adno.data=aadnum
-
-        return render_template('aadhar.html',title='Aadhar',form=form1)
-    else:
-        flash('Please upload a valid image')
-    return render_template('uploadaadhar.html',title='UploadAadhar',form=form)
+        f=form.photo.data
+        filename=secure_filename(f.filename)
+        f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
 
 
-
-@app.route("/pancard",methods=['GET','POST'])
-def pancard():
-    form = PanForm() 
-    if form.validate_on_submit():
-        flash(f'kyc done successfully {form.fname.data}!', 'success')
-        return redirect(url_for('home'))
+        Name,Middle_Name,Surname,bdate,Gender,aadnum=ado.scan(f.filename)
+        # form1=AadharForm()
+        # print("hi fname"+form1.fname.data)
+        # form1.current_user.fname=Name
+        # form1.mname.data=Middle_Name
+        # form1.lname.data=Surname
+        # form1.birthday.data=bdate
+        # form1.gender.data=Gender
+        # form1.adno.data=aadnum
+        return render_template('aadhar.html',fname=Name,mname=Middle_Name,lname=Surname,birthday=bdate,gender=Gender,adno=aadnum)
     else:
         print(form.errors)
-    return render_template('pancard.html', title='PanCard', form=form)
 
-@app.route("/voterid",methods=['GET','POST'])
-def voter():
-    form = VoterForm() 
-    if form.validate_on_submit():
-        flash(f'kyc done successfully {form.fname.data}!', 'success')
-        return redirect(url_for('home'))
-    else:
-        print(form.errors)
-    return render_template('voterid.html', title='VoterID', form=form)
+    return render_template('uploadaadhar.html',title='uploadaadhar',form=form)
 
 
-@app.route("/drivinglicense",methods=['GET','POST'])
-def driver():
-    form = DriverForm() 
-    if form.validate_on_submit():
-        flash(f'kyc done successfully {form.fname.data}!', 'success')
-        return redirect(url_for('home'))
-    else:
-        print(form.errors)
-    return render_template('driving.html', title='DrivingLicense', form=form)
 
-@app.route("/passport",methods=['GET','POST'])
-def passport():
-    form = PassportForm() 
-    if form.validate_on_submit():
-        flash(f'kyc done successfully {form.fname.data}!', 'success')
-        return redirect(url_for('home'))
-    else:
-        print(form.errors)
-    return render_template('passport.html', title='Passport', form=form)
+# @app.route("/pancard",methods=['GET','POST'])
+# def pancard():
+#     form = PanForm() 
+#     if form.validate_on_submit():
+#         flash(f'kyc done successfully {form.fname.data}!', 'success')
+#         return redirect(url_for('home'))
+#     else:
+#         print(form.errors)
+#     return render_template('pancard.html', title='PanCard', form=form)
+
+# @app.route("/voterid",methods=['GET','POST'])
+# def voter():
+#     form = VoterForm() 
+#     if form.validate_on_submit():
+#         flash(f'kyc done successfully {form.fname.data}!', 'success')
+#         return redirect(url_for('home'))
+#     else:
+#         print(form.errors)
+#     return render_template('voterid.html', title='VoterID', form=form)
+
+
+# @app.route("/drivinglicense",methods=['GET','POST'])
+# def driver():
+#     form = DriverForm() 
+#     if form.validate_on_submit():
+#         flash(f'kyc done successfully {form.fname.data}!', 'success')
+#         return redirect(url_for('home'))
+#     else:
+#         print(form.errors)
+#     return render_template('driving.html', title='DrivingLicense', form=form)
+
+# @app.route("/passport",methods=['GET','POST'])
+# def passport():
+#     form = PassportForm() 
+#     if form.validate_on_submit():
+#         flash(f'kyc done successfully {form.fname.data}!', 'success')
+#         return redirect(url_for('home'))
+#     else:
+#         print(form.errors)
+#     return render_template('passport.html', title='Passport', form=form)
 

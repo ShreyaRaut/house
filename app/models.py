@@ -28,9 +28,17 @@ class Aadhar(db.Model,UserMixin):
     mname=db.Column(db.String(20))
     lname=db.Column(db.String(20),nullable=False)
     address=db.Column(db.String(100),nullable=False)
+    gender=db.Column(db.String(6),nullable=False)
     birthday=db.Column(db.DateTime,nullable=False)
     adno=db.Column(db.String(12),nullable=False,primary_key=True)
 
 
     def __repr__(self):
-        return f"Aadhar('{self.fname}',{self.mname}','{self.lname}','{self.address}','{self.birthday}',{self.adno}')"
+        return f"Aadhar('{self.fname}',{self.mname}','{self.lname}','{self.birthday}',{self.adno}')"
+
+# class Uploadaadhar(db.Model,UserMixin):
+#     user_id = db.Column(db.Integer,db.ForeignKey('user.id'),nullable=False,primary_key=True)
+#     # = db.Column(db.LargeBinary)
+
+    # def __repr__(self):
+    #     return f"Uploadaadhar('{self.aadimage}')"
