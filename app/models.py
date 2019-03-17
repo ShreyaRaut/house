@@ -49,3 +49,48 @@ class Aadhar(db.Model):
 
     # def __repr__(self):
     #     return f"Uploadaadhar('{self.aadimage}')"
+
+
+class Pan(db.Model):
+    id=db.Column(db.Integer,primary_key=True,unique=True)
+    fname=db.Column(db.String(20),nullable=False)
+    mname=db.Column(db.String(20))
+    lname=db.Column(db.String(20),nullable=False)
+    father=db.Column(db.String(20),nullable=False)
+    birthday=db.Column(db.DateTime,nullable=False)
+    panno=db.Column(db.String(10),nullable=False)
+    user_id = db.Column(db.Integer,db.ForeignKey('user.id'),nullable=False)
+
+
+class Voter(db.Model):
+    id=db.Column(db.Integer,primary_key=True,unique=True)
+    fname=db.Column(db.String(20),nullable=False)
+    mname=db.Column(db.String(20))
+    lname=db.Column(db.String(20),nullable=False)
+    gender=db.Column(db.String(6),nullable=False)
+    birthday=db.Column(db.DateTime,nullable=False)
+    address=db.Column(db.String(100),nullable=False)
+    doi=db.Column(db.DateTime,nullable=False)
+    voterno=db.Column(db.String(10),nullable=False)
+    user_id = db.Column(db.Integer,db.ForeignKey('user.id'),nullable=False)
+
+class Pass(db.Model):
+    id=db.Column(db.Integer,primary_key=True,unique=True)
+    fname=db.Column(db.String(20),nullable=False)
+    lname=db.Column(db.String(20),nullable=False)
+    nationality=db.Column(db.String(20),nullable=False)
+    gender=db.Column(db.String(6),nullable=False)
+    birthday=db.Column(db.DateTime,nullable=False)
+    placeofbirth=db.Column(db.String(100),nullable=False)
+    doi=db.Column(db.DateTime,nullable=False)
+    passportno=db.Column(db.String(10),nullable=False)
+    user_id = db.Column(db.Integer,db.ForeignKey('user.id'),nullable=False)
+
+class Driving(db.Model):
+    id=db.Column(db.Integer,primary_key=True,unique=True)
+    name=db.Column(db.String(20),nullable=False)
+    birthday=db.Column(db.DateTime,nullable=False)
+    address=db.Column(db.String(100),nullable=False)
+    dov=db.Column(db.DateTime,nullable=False)
+    dlno=db.Column(db.String(10),nullable=False)
+    user_id = db.Column(db.Integer,db.ForeignKey('user.id'),nullable=False)
