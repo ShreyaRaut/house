@@ -93,3 +93,7 @@ class AadharForm(FlaskForm):
 #     doe= DateTimeField('Date of Expiry', format='%d/%m/%y')
 #     passportno=StringField('Passport No',validators=[DataRequired(),Length(min=12,max=12)])
 #     submit = SubmitField('Submit')
+
+class ForgotForm(FlaskForm):
+    username=StringField('User Name',validators=[DataRequired()])
+    submit = SubmitField('Send Temporary Password')
