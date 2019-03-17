@@ -81,6 +81,41 @@ print(text)
 listlen=len(text)
 matchh=False
 
+#Crop the image to aadhar card number
+x,y=noisy_image.shape
+# print(""+str(x)+" "+str(y))
+y1=int(x/2)
+y2=int(y1/1.5)
+x1=int(y/2.5)
+# x1=int(x1/2)
+cropped = noisy_image[y2:x-y2, x1:y]
+
+# Show the cropped image
+cv2.namedWindow('cropped',cv2.WINDOW_NORMAL)
+cv2.resizeWindow('cropped', 900,600)
+cv2.imshow("cropped", cropped)
+cv2.waitKey(0)
+
+#Extract aadhar number from cropped image and store it in a list
+aad = []
+res = pytesseract.image_to_string(cropped, lang="eng")
+aad=res.split()
+# print(aad)
+
+#Remove useless symbols
+aad=[re.sub('[^a-zA-Z0-9/,-:]+', '', _) for _ in aad]
+# print('\n\n')
+
+#Remove empty strings from the list
+while("" in aad) : 
+    aad.remove("")
+print(aad)
+print('\n\n')
+#Form the aadhar number
+aadnum=' '.join(aad)
+print(""+aadnum)
+
+
 # def hasnumbers(textstr):
 #     return any(char.isdigit() for char in textstr)
 
