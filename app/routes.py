@@ -6,12 +6,16 @@ from flask_login import login_user,current_user,logout_user,login_required
 import app.mod_ocr.aad_ocr as ado
 import os
 from werkzeug import secure_filename
+from flask_login import login_user,current_user,logout_user
+import nexmo
 
 
 # APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 # UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static/uploads')
 UPLOAD_FOLDER = os.path.basename('./uploads/')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+client=nexmo.Client(key='d6ab2286', secret='2StTxLOOxYq5OaxF')
 
 @app.route("/")
 @app.route("/home")
@@ -141,4 +145,18 @@ def uploadaadhar():
 #     else:
 #         print(form.errors)
 #     return render_template('passport.html', title='Passport', form=form)
+
+
+@app.route("/forgotpassword",methods=['GET','POST'])
+def index():
+    return render_template('forgot.html',title='Message')
+
+@app.route("/send",methods=['GET','POST'])
+def send():
+    Message='564327'
+    hashed_password = bcrypt.generate_password_hash(Message).decode('utf-8')
+    current_user.password=hashed_password
+    response=client.send_message({'from': 'Nexmo', 'to':'919833760985','text':'Your temporary password is'+qMessage})
+
+    return redirect(url_for('login'))
 
