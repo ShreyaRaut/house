@@ -1,8 +1,97 @@
 {% extends "layout.html" %}
-{% block body %}
+{% block content %}
 
-<h1>Home page</h1>
+<br><br>
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" style="width:1100px;">
+        <ol class="carousel-indicators">
+          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner" role="listbox">
+          <!-- Slide One - Set the background image for this slide in the line below -->
+          <div class="carousel-item active" style="background-image: url('https://miro.medium.com/max/854/1*OP-XNkKquJNtxNQ-3QkU-w.jpeg')">
+            <div class="carousel-caption d-none d-md-block">
+              <h3 class="display-4"></h3>
+              <p class="lead">Know Your Customer!</p>
+            </div>
+          </div>
+          <!-- Slide Two - Set the background image for this slide in the line below -->
+          <div class="carousel-item" style="background-image: url('https://www.e-deal.com/wp-content/uploads/2017/10/Know-Your-Customer.png')">
+            <div class="carousel-caption d-none d-md-block">
+              <h3 class="display-4"></h3>
+              <p class="lead" style='color:black;'>Upload your documents and get all data at one place!</p>
+            </div>
+          </div>
+          <!-- Slide Three - Set the background image for this slide in the line below -->
+          <div class="carousel-item" style="background-image: url('https://cms-img.coverfox.com/aadhar-card.jpg')">
+            <div class="carousel-caption d-none d-md-block">
+              <h3 class="display-4"></h3>
+              <p class="lead" style='color:black;'>Easy Solution to all identifications!.</p>
+            </div>
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
+            </a>
+      </div>
+ <br><br>
+<div class="container">
+   
+        <div class="row" style="flex-direction: row;align-self: center;">
+<div class="text-center" style="flex-direction:row;margin-inline-start:300px ;">
+        <h1 class="font-weight-light"><u>Know Your Customer!</u></h1><br>
+        <p class="lead">e-KYC facilitates completion of KYC process online eliminating the need for filling up physical forms and submission of physical documents. The main objective of e-KYC is to register the customer with least amount of paper work and in the shortest possible time.</p>
+        </div></div></div>
+        <br><br>
+      <img src="https://static1.squarespace.com/static/574f59688a65e256610e470d/t/59b61fd0e45a7cdb51a4270b/1505107934749/Process-chart.png?format=1000w" alt="dkjsk" style="flex-direction: row;align-self: center;width:1100px;height: 300px;"/>
+        <div class="wrapper">
+               <div class="row" style="flex-direction: row;align-self: center;">
+                    <div class="col" style="margin:20px;">
+                      <div class="card" style="width:1000px;height:300px;">
+                            <div class="card-body" style="flex-direction: row;align-self: center;">
+                                    <div class="pure-u-1 pure-u-xs-2-2 pure-u-sm-1-2 pure-u-md-1-2 pure-u-lg-1-2 pure-u-xl-1-2 text-center gdpr-col">
+                                            <div class="gdrp_inside-box" style="width:800px;height:200px">
+                                                <div class="gdpr_box-img">
+                                                    <img src="https://www.jumio.com/app/uploads/2018/10/icon-aml1.png" alt="">
+                                                </div>
+                                                <div class="gdpr_box-txt">
+                                                    <h2 class="gdpr_box-txt-h">What is KYC? </h2>
+                                                        <p class="gdpr_box-txt-p" style="font-size: 20px">Know Your Customer (KYC) refers to the process of verifying the identity of your customers, either before or during the time that they start doing business with you. The term KYC also references the regulated bank customer identity verification practices to assess and monitor customer risk and a legal requirement to comply that are intended to prevent banks from being used for money laundering activities.</p>
+                                                </div>
+                                            </div>
+                                        </div>  
+                            </div>
+                          </div>     
+                        </div>
+                            
+                        <div class="col" style="margin:20px;">
+                          <div class="card" style="width:1000px;height:300px;">
+                                <div class="card-body" style="flex-direction: row;align-self: center;">
+                                        <div class="pure-u-1 pure-u-xs-2-2 pure-u-sm-1-2 pure-u-md-1-2 pure-u-lg-1-2 pure-u-xl-1-2 text-center gdpr-col">
+                                                <div class="gdrp_inside-box" style="width:800px;height:200px">
+                                                    <div class="gdpr_box-img">
+                                                        <img src="https://www.jumio.com/app/uploads/2018/10/icon-aml2.png" alt="">
+                                                    </div>
+                                                    <div class="gdpr_box-txt">
+                                                            <h2 class="gdpr_box-txt-h">Who is Impacted? </h2>
+                                                            <p class="gdpr_box-txt-p" style="font-size: 20px">Regulations are becoming increasingly strict for financial institutions to better verify customer identities during the opening and maintaining of accounts. KYC rules require “reasonable diligence” to know (and retain) the essential facts concerning every customer. Whether you are technically subject to KYC regulation or not, companies of all sizes are embracing KYC practices to protect themselves and their customers.</p>
+                                                    </div>
+                                                </div>
+                                            </div>  
+                                </div>
+                              </div>     
+                            </div>     </div>
+            </div>
+       
+                    
+  <br>
+  <br><br>
+  <!-- Page Content -->
 
-<button onclick="register.html">Register</button>
-
-{% endblock %}
+{% endblock content %}
