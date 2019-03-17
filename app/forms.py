@@ -42,7 +42,7 @@ class AadharForm(FlaskForm):
     lname = StringField('Last name',validators=[Length(min=2, max=20)])
     address=StringField('Address',validators=[Length(min=5,max=100)])
     gender = StringField('Gender',validators=[Length(min=4, max=6)])
-    birthday= DateTimeField('Date of Birth', format='%d/%m/%yy')
+    birthday= DateTimeField('Date of Birth', format='%d/%m/%y')
     adno=StringField('Aadhar No',validators=[DataRequired(),Length(min=12,max=12)])
     submit = SubmitField('Submit')
 
