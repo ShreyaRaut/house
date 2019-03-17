@@ -121,17 +121,17 @@ for index in range(0,listlen):
 # aadnum=' '.join(aad)
 # print(""+aadnum)
 
-# def hasnumbers(textstr):
-#     return any(char.isdigit() for char in textstr)
-
-# for index in range(0,listlen):
-#     if(text[index].isalnum()):
-#         matchh = hasnumbers(text[index])
-#     if(len(text[index])==10 and matchh):
-#         pannum=text[index]
-#     if(bool(re.search('^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$',str(text[index])))):
-#         bdate=text[index]
-#     else:
-#         index=index+1
-# print("Aadhar naumber:"+aadnum)
+def hasnumbers(textstr):
+    return any(char.isdigit() for char in textstr)
+listlen=len(text)
+for index in range(0,listlen):
+    if(text[index].isalnum()):
+        matchh = hasnumbers(text[index])
+    if(len(text[index])==8 and matchh):
+        passnum=text[index]
+    if(bool(re.search('^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$',str(text[index])))):
+        bdate=text[index]
+    else:
+        index=index+1
+print("Aadhar naumber:"+passnum)
 
