@@ -1,6 +1,6 @@
 from flask import Flask,render_template,request,session,logging,url_for,redirect,flash
 from app import app, db, bcrypt
-from app.forms import RegistrationForm,LoginForm,AadharForm,UploadAadharForm
+from app.forms import RegistrationForm,LoginForm,AadharForm,UploadAadharForm,ForgotForm
 from app.models import User
 from flask_login import login_user,current_user,logout_user,login_required
 import app.mod_ocr.aad_ocr as ado
@@ -8,6 +8,7 @@ import os
 from werkzeug import secure_filename
 from flask_login import login_user,current_user,logout_user
 import nexmo
+import random
 
 
 # APP_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -149,14 +150,19 @@ def uploadaadhar():
 
 @app.route("/forgotpassword",methods=['GET','POST'])
 def index():
-    return render_template('forgot.html',title='Message')
+    form=ForgotForm()
+    if form.validate_on_submit():
+        user=User.query.filter_by(username=form.username.data).first()
+        # number="91"+str(user.mobile)
+        number='919833760985'
+        Message=str(random.randint(100000,999999))
+        hashed_password = bcrypt.generate_password_hash(Message).decode('utf-8')
+        user.password=hashed_password
+        db.session.commit()
+        response=client.send_message({'from': 'Nexmo', 'to':number,'text':'Your temporary password is '+Message})
 
-@app.route("/send",methods=['GET','POST'])
-def send():
-    Message='564327'
-    hashed_password = bcrypt.generate_password_hash(Message).decode('utf-8')
-    current_user.password=hashed_password
-    response=client.send_message({'from': 'Nexmo', 'to':'919833760985','text':'Your temporary password is'+qMessage})
-
-    return redirect(url_for('login'))
+        return redirect(url_for('login'))
+    else:
+         print(form.errors)
+    return render_template('forgot.html',title='Message',form=form)
 
