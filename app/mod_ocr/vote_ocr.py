@@ -67,6 +67,7 @@ cv2.resizeWindow('image', 600,600)
 cv2.imshow('image',noisy_image)
 cv2.waitKey()
 text = []
+
 result = pytesseract.image_to_string(noisy_image, lang="eng")
 # print(""+result)
 text=result.split()
@@ -76,13 +77,16 @@ text=[re.sub('[^a-zA-Z0-9/]+', '', _) for _ in text]
 # index=text.index('Number')
 
 matchh=False
-print('/n/n')
+
 while("" in text) : 
     text.remove("")
-# print(text)
+print(text)
+listlen=len(text)
 
-
-
+for i in range(0,listlen):
+    if(text[i]=="CARD"):
+        voter_id=text[i+1]
+        break
 
 x,y=noisy_image.shape
 # print(""+str(x)+" "+str(y))
@@ -151,3 +155,4 @@ print('Birthday:'+bdate)
 print('Name:'+Name)
 print('Middle name:'+Middle_Name)
 print('Surname:'+Surname)
+print('Voter_ID : '+voter_id)

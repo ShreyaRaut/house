@@ -79,6 +79,50 @@ while("" in text) :
 print(text)
 # index=text.index('Number')
 listlen=len(text)
+
+for i in range(0,listlen):
+    if(text[i]=="No"):
+        DL_no=text[i+1]
+        DL_no=DL_no+text[i+2]
+        break
+
+print("Driving License No : " +DL_no)    
+
+for i in range(0,listlen):
+    if(text[i]=="Valid"):
+        dov=text[i+2]
+        break
+
+print("Date of Validity : " +dov) 
+
+for i in range(0,listlen):
+    if(text[i]=="Name"):
+        name=text[i+1]
+        name=name+text[i+2]
+        break
+
+print("Name : " +name) 
+flag=0
+add=""
+for i in range(0,listlen):
+    if(text[i]=="Add"):
+        flag=1
+    if(flag==1):    
+        if(text[i]!="PIN"):
+            add=add+text[i+1]+" "
+        else:
+            break
+    i=i+1   
+add+=text[i+1]
+print("Address : " +add) 
+
+for i in range(0,listlen):
+    if(text[i]=="DOB"):
+        dob=text[i+1]
+        break
+
+print("Date of Birth : " +dob) 
+
 matchh=False
 
 #Crop the image to aadhar card number
