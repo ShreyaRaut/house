@@ -20,7 +20,7 @@ class User(db.Model,UserMixin):
     pan=db.relationship('Pan',backref='user',lazy=True)
 
     def __repr__(self):
-        return f"User('{self.id}',{self.username}',{self.fname}','{self.lname}','{self.email}','{self.mobile},''{self.aadhar})"
+        return f"User('{self.id}',{self.username}',{self.fname}','{self.lname}','{self.email}','{self.mobile},''{self.aadhar}','{self.pan}')"
 
 
 class Aadhar(db.Model):

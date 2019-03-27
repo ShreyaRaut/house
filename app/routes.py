@@ -1,12 +1,7 @@
 from flask import Flask,render_template,request,session,logging,url_for,redirect,flash
 from app import app, db, bcrypt
-<<<<<<< HEAD
-from app.forms import RegistrationForm,LoginForm,AadharForm,UploadAadharForm,ForgotForm,UploadPanForm,PanForm
+from app.forms import RegistrationForm,LoginForm,AadharForm,UploadAadharForm,ForgotForm,UploadPanForm,PanForm,ChooseForm
 from app.models import User,Aadhar,Pan
-=======
-from app.forms import RegistrationForm,LoginForm,AadharForm,UploadAadharForm,ForgotForm,ChooseForm
-from app.models import User,Aadhar
->>>>>>> master
 from flask_login import login_user,current_user,logout_user,login_required
 import app.mod_ocr.aad_ocr as ado
 import app.mod_ocr.aadA_ocr as ada
@@ -133,16 +128,11 @@ def uploadaadhar():
     else:
         aad= User.query.get_or_404(current_user.id)
         aadharid=aad.aadhar
-        if aadharid is None:
-            print(form.errors)
-            
-        else:
+        if len(aadharid)!=0:
             flash(f'Your aadhar card is already registered ','success')
             return redirect(url_for('aadhar',user_id=current_user.id))
-
-
-        
-
+        else:
+            print(form.errors)
     return render_template('uploadaadhar.html',title='uploadaadhar',form=form)
 
 
@@ -164,8 +154,15 @@ def uploadpancard():
         flash(f'kyc done successfully !', 'success')
         return redirect(url_for('pancard',user_id=current_user.id))
     else:
-        print(form.errors)
-    return render_template('uploadpan.html', title='PanCard', form=form)
+        pann=User.query.get_or_404(current_user.id)
+        panid=pann.pan
+        if len(panid)!=0:
+            flash(f'Your pan card is already registered ','success')
+            return redirect(url_for('pancard',user_id=current_user.id))
+        else:
+            print(form.errors)
+    return render_template('uploadpan.html',title='uploadpancard',form=form)
+
 
 @app.route("/pancard/<int:user_id>/edit",methods=['GET','POST'])
 def pancard(user_id):
