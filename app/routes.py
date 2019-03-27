@@ -1,7 +1,12 @@
 from flask import Flask,render_template,request,session,logging,url_for,redirect,flash
 from app import app, db, bcrypt
+<<<<<<< HEAD
 from app.forms import RegistrationForm,LoginForm,AadharForm,UploadAadharForm,ForgotForm,UploadPanForm,PanForm
 from app.models import User,Aadhar,Pan
+=======
+from app.forms import RegistrationForm,LoginForm,AadharForm,UploadAadharForm,ForgotForm,ChooseForm
+from app.models import User,Aadhar
+>>>>>>> master
 from flask_login import login_user,current_user,logout_user,login_required
 import app.mod_ocr.aad_ocr as ado
 import app.mod_ocr.aadA_ocr as ada
@@ -31,6 +36,12 @@ def home():
 @app.route("/about")
 def about():
     return render_template('about.html', title='About')
+
+
+@app.route("/chooseform")
+def chooseform():
+    form=ChooseForm()
+    return render_template('chooseform.html',form=form, title='Choose_Form')
 
 
 @app.route("/register", methods=['GET','POST'])
@@ -120,7 +131,17 @@ def uploadaadhar():
         flash(f'kyc done successfully !', 'success')
         return redirect(url_for('aadhar',user_id=current_user.id))
     else:
-        print(form.errors)
+        aad= User.query.get_or_404(current_user.id)
+        aadharid=aad.aadhar
+        if aadharid is None:
+            print(form.errors)
+            
+        else:
+            flash(f'Your aadhar card is already registered ','success')
+            return redirect(url_for('aadhar',user_id=current_user.id))
+
+
+        
 
     return render_template('uploadaadhar.html',title='uploadaadhar',form=form)
 

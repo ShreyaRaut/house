@@ -24,8 +24,6 @@ class RegistrationForm(FlaskForm):
         if user:
             raise ValidationError('Email address already exist!')
 
-
-
 class LoginForm(FlaskForm):
     username=StringField('User Name',validators=[DataRequired()])
     password=PasswordField('Password',validators=[DataRequired()])
@@ -94,3 +92,13 @@ class PassportForm(FlaskForm):
 class ForgotForm(FlaskForm):
     username=StringField('User Name',validators=[DataRequired()])
     submit = SubmitField('Send Temporary Password')
+
+class ChooseForm(FlaskForm):
+    choice_a = SubmitField('Aadhar Card')
+    choice_b = SubmitField('Pan Card')
+    choice_c = SubmitField('Voters Id')
+    choice_d = SubmitField('Driving License')
+    choice_e = SubmitField('Passport')
+
+
+    
