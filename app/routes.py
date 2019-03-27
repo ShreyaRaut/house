@@ -4,6 +4,7 @@ from app.forms import RegistrationForm,LoginForm,AadharForm,UploadAadharForm,For
 from app.models import User,Aadhar
 from flask_login import login_user,current_user,logout_user,login_required
 import app.mod_ocr.aad_ocr as ado
+import app.mod_ocr.aadA_ocr as ada
 import os
 from werkzeug import secure_filename
 from flask_login import login_user,current_user,logout_user
@@ -14,8 +15,9 @@ import random
 
 # APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 # UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static/uploads')
-UPLOAD_FOLDER = os.path.basename('./uploads/')
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# UPLOAD_FOLDER = os.path.basename('./uploads/')
+# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['TESTING']=False
 
 client=nexmo.Client(key='d6ab2286', secret='2StTxLOOxYq5OaxF')
 
@@ -59,60 +61,40 @@ def login():
     return render_template('login.html', title='Login', form=form)
 
 # form1=AadharForm()
-@app.route("/aadhar",methods=['GET','POST'])
-def aadhar():
-    user_id=current_user.id
+@app.route("/aadhar/<int:user_id>/edit",methods=['GET','POST'])
+def aadhar(user_id):
+    # user_id=current_user.id
     aad= Aadhar.query.get_or_404(user_id)
 
-    flash(f'First Name:{aad.fname}')
-    flash(f'Middle Name:{aad.mname}')
-    flash(f'Last Name:{aad.lname}')
-    flash(f'Address:{aad.address}')
-    flash(f'Gender:{aad.gender}')
-    flash(f'Birthday:{aad.birthday}')
-    flash(f'Aadhar Number:{aad.adno}')
-    # print("fvdfvdf"+user_id)
     form=AadharForm()
-    
-    
-    # form.fname.data=aad.fname
-    # form.mname.data=aad.mname
-    # form.lname.data=aad.lname
-    # form.address.data=aad.address
-    # form.gender.data=aad.gender
-    # form.birthday.data=aad.birthday
-    # form.adno.data=aad.adno
 
-    # if form.validate_on_submit():
-    #     aad.fname=form.fname.data
-    #     aad.mname=form.mname.data
-    #     aad.lname=form.lname.data
-    #     aad.address=form.address.data
-    #     aad.gender=form.gender.data
-    #     aad.birthday=form.birthday.data
-    #     aad.adno=form.adno.data
-    #     db.session.commit()
+    if form.validate_on_submit():
+        aad.fname=form.fname.data
+        aad.mname=form.mname.data
+        aad.lname=form.lname.data
+        aad.address=form.address.data
+        aad.gender=form.gender.data
+        aad.birthday=form.birthday.data
+        aad.adno=form.adno.data
+        db.session.commit()
 
-    #     # print("aadhar form")
-    #     # hashaad=bcrypt.generate_password_hash(form.adno.data).decode('utf-8')
-    #     # user=Aadhar(fname=form.fname.data,mname=form.mname.data,lname=form.lname.data,address=form.address.data,gender=form.gender.data,birthday=form.birthday.data,adno=hashaad)
-    #     # print("hi"+ form.fname.data)
-    #     # print("your aadhar no "+form.adno.data)
-    #     # db.session.add(user)
-    #     # db.session.commit()
-    #     flash(f'Your aadhar details are updated!', 'success')
-    #     return redirect(url_for('home'),)
-    # elif request.method=='GET':
-    #     form.fname.data=aad.fname
-    #     form.mname.data=aad.mname
-    #     form.lname.data=aad.lname
-    #     form.address.data=aad.address
-    #     form.gender.data=aad.gender
-    #     form.birthday.data=aad.birthday
-    #     form.adno.data=aad.adno
-    # else:
-    #     print(form.errors)
-    return render_template('aadhar.html',title='aadhar', form=form)
+        flash(f'Your aadhar details are updated!', 'success')
+        return redirect(url_for('viewaadhar',user_id=current_user.id),)
+    else:
+        print(form.errors)
+    return render_template('aadhar.html',title='aadhar', form=form,fname=aad.fname,
+    lname=aad.lname,
+    mname=aad.mname,
+    address=aad.address,
+    gender=aad.gender,
+    birthday=aad.birthday,
+    adno=aad.adno)
+
+@app.route("/aadhar/<int:user_id>/view")
+def viewaadhar(user_id):
+    aad= Aadhar.query.get_or_404(user_id)
+
+    return render_template('viewaadhar.html',title='viewaadhar',fname=aad.fname,mname=aad.mname,lname=aad.lname)
 
 @app.route("/logout")
 def logout():
@@ -125,29 +107,21 @@ def uploadaadhar():
     form=UploadAadharForm()
     if form.validate_on_submit():
         f=form.photo.data
-        filename=secure_filename(f.filename)
-        f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+        fa=form.addphoto.data
+        # filename=secure_filename(f.filename)
+        # addfile=secure_filename(fa.filename)
+        # f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+        # fa.save(os.path.join(app.config['UPLOAD_FOLDER'],addfile))
 
 
         Name,Middle_Name,Surname,bdate,Gender,aadnum=ado.scan(f.filename)
-        print(current_user.id)
-        bdate=datetime.datetime.strptime('30-01-12', '%d-%m-%y').date()
-        hashaad=bcrypt.generate_password_hash(aadnum).decode('utf-8')
-        user=Aadhar(fname=Name,mname=Middle_Name,lname=Surname,address='            ',gender=Gender,birthday=bdate,adno=hashaad,user_id=current_user.id)
+        address=ada.scan_aada(fa.filename)
+        # hashaad=bcrypt.generate_password_hash(aadnum).decode('utf-8')
+        user=Aadhar(fname=Name,mname=Middle_Name,lname=Surname,address=address,gender=Gender,birthday=bdate,adno=aadnum,user_id=current_user.id)
         db.session.add(user)
         db.session.commit()
         flash(f'kyc done successfully !', 'success')
-        return redirect(url_for('aadhar'))
-        # form1=AadharForm()
-        # print("hi fname"+form1.fname.data)
-        # form1.current_user.fname=Name
-        # form1.mname.data=Middle_Name
-        # form1.lname.data=Surname
-        # form1.birthday.data=bdate
-        # form1.gender.data=Gender
-        # form1.adno.data=aadnum
-        # return render_template('aadhar.html',fname=Name,mname=Middle_Name,lname=Surname,birthday=bdate,gender=Gender,adno=aadnum,form=form1)
-        # if form1.validate_on_submit()
+        return redirect(url_for('aadhar',user_id=current_user.id))
     else:
         print(form.errors)
 
@@ -159,8 +133,19 @@ def uploadaadhar():
 # def pancard():
 #     form = PanForm() 
 #     if form.validate_on_submit():
-#         flash(f'kyc done successfully {form.fname.data}!', 'success')
-#         return redirect(url_for('home'))
+#         f=form.photo.data
+#         filename=secure_filename(f.filename)
+#         f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+
+
+#         Name,Middle_Name,Surname,Father,bdate,panno=pan.scan_pan(f.filename)
+#         bdate=datetime.datetime.strptime('30-01-12', '%d-%m-%y').date()
+#         hashpan=bcrypt.generate_password_hash(panno).decode('utf-8')
+#         user=Pan(fname=Name,mname=Middle_Name,lname=Surname,birthday=bdate,panno=hashaad,user_id=current_user.id)
+#         db.session.add(user)
+#         db.session.commit()
+#         flash(f'kyc done successfully !', 'success')
+#         return redirect(url_for('pan_edit'))
 #     else:
 #         print(form.errors)
 #     return render_template('pancard.html', title='PanCard', form=form)
@@ -169,8 +154,20 @@ def uploadaadhar():
 # def voter():
 #     form = VoterForm() 
 #     if form.validate_on_submit():
-#         flash(f'kyc done successfully {form.fname.data}!', 'success')
-#         return redirect(url_for('home'))
+#         f=form.photo.data
+#         filename=secure_filename(f.filename)
+#         f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+
+
+#         Name,Middle_Name,Surname,Gender,bdate,add,doi,voterno=vote.scan_vote(f.filename)
+#         add=votea.scan_voteA(f.filename)
+#         bdate=datetime.datetime.strptime('30-01-12', '%d-%m-%y').date()
+#         hashvote=bcrypt.generate_password_hash(voterno).decode('utf-8')
+#         user=Voter(fname=Name,mname=Middle_Name,lname=Surname,gender=Gender,birthday=bdate,doi=doi,voterno=hashvote,user_id=current_user.id)
+#         db.session.add(user)
+#         db.session.commit()
+#         flash(f'kyc done successfully !', 'success')
+#         return redirect(url_for('vote_edit'))
 #     else:
 #         print(form.errors)
 #     return render_template('voterid.html', title='VoterID', form=form)
@@ -180,8 +177,18 @@ def uploadaadhar():
 # def driver():
 #     form = DriverForm() 
 #     if form.validate_on_submit():
-#         flash(f'kyc done successfully {form.fname.data}!', 'success')
-#         return redirect(url_for('home'))
+#         f=form.photo.data
+#         filename=secure_filename(f.filename)
+#         f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+#         Name,bdate,add,dov,dlno=driv.scan_dri(f.filename)
+#         bdate=datetime.datetime.strptime('30-01-12', '%d-%m-%y').date()
+#         dov=datetime.datetime.strptime('30-01-12', '%d-%m-%y').date()
+#         hashdl=bcrypt.generate_password_hash(dlno).decode('utf-8')
+#         user=Driving(name=Name,birthday=bdate,dlno=hashdl,dov=dov,address=add,user_id=current_user.id)
+#         db.session.add(user)
+#         db.session.commit()
+#         flash(f'kyc done successfully !', 'success')
+#         return redirect(url_for('driv_edit'))
 #     else:
 #         print(form.errors)
 #     return render_template('driving.html', title='DrivingLicense', form=form)
@@ -190,8 +197,18 @@ def uploadaadhar():
 # def passport():
 #     form = PassportForm() 
 #     if form.validate_on_submit():
-#         flash(f'kyc done successfully {form.fname.data}!', 'success')
-#         return redirect(url_for('home'))
+#         f=form.photo.data
+#         filename=secure_filename(f.filename)
+#         f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+#         Name,Surname,nat,gender,bdate,doi,passno=pass.scan_pass(f.filename)
+#         bdate=datetime.datetime.strptime('30-01-12', '%d-%m-%y').date()
+#         doi=datetime.datetime.strptime('30-01-12', '%d-%m-%y').date()
+#         hashpas=bcrypt.generate_password_hash(passno).decode('utf-8')
+#         user=Pass(fname=Name,lname=Surname,nationality=nat,birthday=bdate,dlno=hashdl,dov=dov,address=add,user_id=current_user.id)
+#         db.session.add(user)
+#         db.session.commit()
+#         flash(f'kyc done successfully !', 'success')
+#         return redirect(url_for('driv_edit'))
 #     else:
 #         print(form.errors)
 #     return render_template('passport.html', title='Passport', form=form)

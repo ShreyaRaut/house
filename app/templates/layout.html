@@ -36,7 +36,7 @@
               <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
               <a class="nav-item nav-link" href="{{ url_for('uploadaadhar') }}">KYC status</a>
 
-              <!-- <a class="nav-item nav-link" href="{{ url_for('aadhar') }}">Kyc Status</a> -->
+              <!-- <a class="nav-item nav-link" href="{{ url_for('aadhar',user_id=current_user.id) }}">Kyc Status</a> -->
 
               <!-- {% else %} -->
               <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>

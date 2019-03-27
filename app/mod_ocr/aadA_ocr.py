@@ -10,7 +10,7 @@ from skimage.morphology import disk
  
 def scan_aada(file):
 #Read the image 
-    img =cv2.imread('aad9.jpg')
+    img =cv2.imread(file)
 
     #Resize it
     img = cv2.resize(img, None, fx=1.5, fy=1.5, interpolation=cv2.INTER_CUBIC)

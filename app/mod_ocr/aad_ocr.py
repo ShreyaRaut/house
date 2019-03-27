@@ -119,7 +119,7 @@ def scan(file):
     print(aad)
 
     #Form the aadhar number
-    aadnum=' '.join(aad)
+    aadnum=''.join(aad)
 
     #Store Name,Middle name,Last name
 

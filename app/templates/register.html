@@ -1,26 +1,29 @@
 {% extends "layout.html" %}
 {% block content %}
-  
-    <div class="row">
-      <div class="col-lg-10 col-xl-9 mx-auto">
-        <div class="card card-signin flex-row my-5">
-          <div class="card-img-left d-none d-md-flex">
-             <!-- Background image for card set in CSS! -->
-          </div>
-          <div class="card-body">
-            <h5 class="card-title text-center">Register</h5>
-            <form class="form-signin">
-             {{ form.hidden_tag() }}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
             {{ form.csrf_token }}
-              <div class="form-label-group">
-               {{ form.username.label(class="form-control-label") }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">ekyc</legend>
+
+                <div class="form-group">
+                    {{ form.username.label(class="form-control-label") }}
 
                     {% if form.username.errors %}
-                    {{ form.username(class="form-control form-control-lg is-invalid") }}
-                
-              </div>
-               <div class="form-label-group">
-              {{ form.fname.label(class="form-control-label") }}
+                        {{ form.username(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.username(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.fname.label(class="form-control-label") }}
 
                     {% if form.fname.errors %}
                         {{ form.fname(class="form-control form-control-lg is-invalid") }}
@@ -32,10 +35,10 @@
                     {% else %}
                         {{ form.fname(class="form-control form-control-lg") }}
                     {% endif %}
-              </div>
+                </div>
 
-              <div class="form-label-group">
-                {{ form.mname.label(class="form-control-label") }}
+                <div class="form-group">
+                    {{ form.mname.label(class="form-control-label") }}
 
                     {% if form.mname.errors %}
                         {{ form.mname(class="form-control form-control-lg is-invalid") }}
@@ -47,11 +50,11 @@
                     {% else %}
                         {{ form.mname(class="form-control form-control-lg") }}
                     {% endif %}
-              </div>
+                </div>
 
 
-              <div class="form-label-group">
-               {{ form.lname.label(class="form-control-label") }}
+                <div class="form-group">
+                    {{ form.lname.label(class="form-control-label") }}
 
                     {% if form.lname.errors %}
                         {{ form.lname(class="form-control form-control-lg is-invalid") }}
@@ -63,9 +66,15 @@
                     {% else %}
                         {{ form.lname(class="form-control form-control-lg") }}
                     {% endif %}
-              </div>
-             <div class="form-label-group">
-               {{ form.mobile.label(class="form-control-label") }}
+                </div>
+
+
+
+
+
+                
+                <div class="form-group">
+                    {{ form.mobile.label(class="form-control-label") }}
                     {% if form.mobile.errors %}
                         {{ form.mobile(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
@@ -76,10 +85,16 @@
                     {% else %}
                         {{ form.mobile(class="form-control form-control-lg") }}
                     {% endif %}
-              </div>
+                </div>
 
-              <div class="form-label-group">
-               {{ form.email.label(class="form-control-label") }}
+                
+
+
+
+
+
+                <div class="form-group">
+                    {{ form.email.label(class="form-control-label") }}
                     {% if form.email.errors %}
                         {{ form.email(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
@@ -90,12 +105,9 @@
                     {% else %}
                         {{ form.email(class="form-control form-control-lg") }}
                     {% endif %}
-              </div>
-              
-              <hr>
-
-              <div class="form-label-group">
-                 {{ form.password.label(class="form-control-label") }}
+                </div>
+                <div class="form-group">
+                    {{ form.password.label(class="form-control-label") }}
                     {% if form.password.errors %}
                         {{ form.password(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
@@ -106,10 +118,9 @@
                     {% else %}
                         {{ form.password(class="form-control form-control-lg") }}
                     {% endif %}
-              </div>
-              
-              <div class="form-label-group">
-                 {{ form.confirm_password.label(class="form-control-label") }}
+                </div>
+                <div class="form-group">
+                    {{ form.confirm_password.label(class="form-control-label") }}
                     {% if form.confirm_password.errors %}
                         {{ form.confirm_password(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
@@ -120,20 +131,16 @@
                     {% else %}
                         {{ form.confirm_password(class="form-control form-control-lg") }}
                     {% endif %}
-              </div>
-
-              <div class="form-group">
+                </div>
+            </fieldset>
+            <div class="form-group">
                 {{ form.submit(class="btn btn-outline-info") }}
             </div>
-       
-              <a class="d-block text-center mt-2 small" href="{{ url_for('login') }}"></a>
-              <hr class="my-4">
-              <button class="btn btn-lg btn-google btn-block text-uppercase" type="submit"><i class="fab fa-google mr-2"></i> Sign up with Google</button>
-              <button class="btn btn-lg btn-facebook btn-block text-uppercase" type="submit"><i class="fab fa-facebook-f mr-2"></i> Sign up with Facebook</button>
-            </form>
-          </div>
-        </div>
-      </div>
+        </form>
     </div>
-
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            Already Have An Account? <a class="ml-2" href="{{ url_for('login') }}">Sign In</a>
+        </small>
+    </div>
 {% endblock content %}
