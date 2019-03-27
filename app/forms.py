@@ -49,6 +49,10 @@ class UploadPanForm(FlaskForm):
     photo=FileField('Details',validators=[FileRequired()])
     submit = SubmitField('Upload')
 
+class UploadVoterForm(FlaskForm):
+    photo=FileField('Details',validators=[FileRequired()])
+    addphoto=FileField('Address Details',validators=[FileRequired()])
+    submit = SubmitField('Upload')
 
 class PanForm(FlaskForm):
     fname = StringField('First Name',validators=[DataRequired(), Length(min=2, max=20)])
@@ -64,10 +68,10 @@ class VoterForm(FlaskForm):
     mname = StringField('Middle Name',validators=[Length(min=2, max=20)])
     lname = StringField('Last name',validators=[Length(min=2, max=20)])
     gender = StringField('Gender',validators=[Length(min=4, max=6)])
-    birthday= DateTimeField('Date of Birth', format='%d/%m/%y')
-    address=StringField('Address',validators=[Length(min=5,max=100)])
-    doc= DateTimeField('Date of Creation', format='%d/%m/%y')
-    voterno=StringField('Voter No',validators=[DataRequired(),Length(min=12,max=12)])
+    birthday= StringField('Date of Birth',validators=[Length(min=5, max=10)] )
+    address=StringField('Address',validators=[Length(min=5,max=500)])
+    doi= StringField('Date of Issue', validators=[Length(min=5,max=500)])
+    voterno=StringField('Voter No',validators=[DataRequired(),Length(min=10,max=10)])
     submit = SubmitField('Submit')
 
 class DriverForm(FlaskForm):

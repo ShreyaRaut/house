@@ -117,9 +117,10 @@ def scan_voteA(file):
     # print('\n\n')
     listlen=len(aad)
 
+    doc='00/00/0000'
     for index in range(0,listlen):
         if(bool(re.search('^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$',str(aad[index])))):
-            doi=aad[index]
+            doc=aad[index]
         index=index+1
     #Crop the image to aadhar card number
     x,y=noisy_image.shape
@@ -173,4 +174,4 @@ def scan_voteA(file):
     #         index=index+1
     # print("Aadhar naumber:"+aadnum)   
 
-    return aadnum,doi
+    return aadnum,doc

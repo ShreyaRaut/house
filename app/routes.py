@@ -1,11 +1,13 @@
 from flask import Flask,render_template,request,session,logging,url_for,redirect,flash
 from app import app, db, bcrypt
-from app.forms import RegistrationForm,LoginForm,AadharForm,UploadAadharForm,ForgotForm,UploadPanForm,PanForm,ChooseForm
-from app.models import User,Aadhar,Pan
+from app.forms import RegistrationForm,LoginForm,AadharForm,UploadAadharForm,ForgotForm,UploadPanForm,PanForm,ChooseForm,UploadVoterForm,VoterForm
+from app.models import User,Aadhar,Pan,Voter
 from flask_login import login_user,current_user,logout_user,login_required
 import app.mod_ocr.aad_ocr as ado
 import app.mod_ocr.aadA_ocr as ada
 import app.mod_ocr.pan_ocr as pan
+import app.mod_ocr.vote_ocr as vote
+import app.mod_ocr.voteA_ocr as votea
 import os
 from werkzeug import secure_filename
 from flask_login import login_user,current_user,logout_user
@@ -197,28 +199,72 @@ def viewpan(user_id):
 
     return render_template('viewpan.html',title='viewpan',fname=aad.fname,mname=aad.mname,lname=aad.lname)
 
-# @app.route("/voterid",methods=['GET','POST'])
-# def voter():
-#     form = VoterForm() 
-#     if form.validate_on_submit():
-#         f=form.photo.data
-#         filename=secure_filename(f.filename)
-#         f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+@app.route("/uploadvoter",methods=['GET','POST'])
+def uploadvoter():
+    form = UploadVoterForm() 
+    if form.validate_on_submit():
+        f=form.photo.data
+        fa=form.addphoto.data
+        filename=secure_filename(f.filename)
+        addfile=secure_filename(fa.filename)
+        f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+        fa.save(os.path.join(app.config['UPLOAD_FOLDER'],addfile))
 
 
-#         Name,Middle_Name,Surname,Gender,bdate,add,doi,voterno=vote.scan_vote(f.filename)
-#         add=votea.scan_voteA(f.filename)
-#         bdate=datetime.datetime.strptime('30-01-12', '%d-%m-%y').date()
-#         hashvote=bcrypt.generate_password_hash(voterno).decode('utf-8')
-#         user=Voter(fname=Name,mname=Middle_Name,lname=Surname,gender=Gender,birthday=bdate,doi=doi,voterno=hashvote,user_id=current_user.id)
-#         db.session.add(user)
-#         db.session.commit()
-#         flash(f'kyc done successfully !', 'success')
-#         return redirect(url_for('vote_edit'))
-#     else:
-#         print(form.errors)
-#     return render_template('voterid.html', title='VoterID', form=form)
+        Name,Middle_Name,Surname,Gender,bdate,voterno=vote.scan_vote(f.filename)
+        add,doi=votea.scan_voteA(fa.filename)
+        # hashvote=bcrypt.generate_password_hash(voterno).decode('utf-8')
+        user=Voter(fname=Name,mname=Middle_Name,lname=Surname,gender=Gender,birthday=bdate,address=add,doi=doi,voterno=voterno,user_id=current_user.id)
+        db.session.add(user)
+        db.session.commit()
+        flash(f'kyc done successfully !', 'success')
+        return redirect(url_for('voterid',user_id=current_user.id))
+    else:
+        vot=User.query.get_or_404(current_user.id)
+        voteid=vot.voter
+        if len(voteid)!=0:
+            flash(f'Your voter id is already registered ','success')
+            return redirect(url_for('voterid',user_id=current_user.id))
+        else:
+            print(form.errors)
+    return render_template('uploadvoter.html', title='uploadvoter', form=form)
 
+@app.route("/voter/<int:user_id>/edit",methods=['GET','POST'])
+def voterid(user_id):
+    # user_id=current_user.id
+    aad= Voter.query.get_or_404(user_id)
+
+    form=VoterForm()
+
+    if form.validate_on_submit():
+        aad.fname=form.fname.data
+        aad.mname=form.mname.data
+        aad.lname=form.lname.data
+        aad.gender=form.gender.data
+        aad.birthday=form.birthday.data
+        aad.address=form.address.data
+        aad.doi=form.doi.data
+        aad.voterno=form.voterno.data
+        db.session.commit()
+
+        flash(f'Your voter id details are updated!', 'success')
+        return redirect(url_for('viewvote',user_id=current_user.id))
+    else:
+        print(form.errors)
+    return render_template('voterid.html',title='voter', form=form,fname=aad.fname,
+    lname=aad.lname,
+    mname=aad.mname,
+    gender=aad.gender,
+    birthday=aad.birthday,
+    address=aad.address,
+    doi=aad.doi,
+    voterno=aad.voterno)
+
+@app.route("/voter/<int:user_id>/view")
+def viewvote(user_id):
+    aad= Voter.query.get_or_404(user_id)
+
+    return render_template('viewvote.html',title='viewvote',fname=aad.fname,mname=aad.mname,lname=aad.lname)
 
 # @app.route("/drivinglicense",methods=['GET','POST'])
 # def driver():
