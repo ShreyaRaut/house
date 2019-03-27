@@ -49,11 +49,11 @@ def scan_pan(file):
     # cv2.drawContours(img, contours, -1, (0,255,0), 3)
 
 
-    cv2.namedWindow('image',cv2.WINDOW_NORMAL)
-    cv2.resizeWindow('image', 600,600)
+    # cv2.namedWindow('image',cv2.WINDOW_NORMAL)
+    # cv2.resizeWindow('image', 600,600)
     # cv2.imshow('image',img)
-    cv2.imshow('image',noisy_image)
-    cv2.waitKey()
+    # cv2.imshow('image',noisy_image)
+    # cv2.waitKey()
     text = []
     result = pytesseract.image_to_string(noisy_image, lang="eng")
     # print(""+result)
@@ -77,8 +77,10 @@ def scan_pan(file):
             bdate=text[index]
         else:
             index=index+1
-    name=current_user.fname
-    name_index=text.index(name)
+
+    new_list = [item.lower() for item in text]
+    name=current_user.fname.lower()
+    name_index=new_list.index(name)
     i=name_index
     Name=text[i]
     Middle_Name=text[i+1]
@@ -126,4 +128,4 @@ def scan_pan(file):
 
     # print("Father's name:"+aadnum)
 
-    return pannum,bdate,Name,Middle_Name,Surname
+    return Name,Middle_Name,Surname,father,bdate,pannum

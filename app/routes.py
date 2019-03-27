@@ -1,10 +1,11 @@
 from flask import Flask,render_template,request,session,logging,url_for,redirect,flash
 from app import app, db, bcrypt
-from app.forms import RegistrationForm,LoginForm,AadharForm,UploadAadharForm,ForgotForm
-from app.models import User,Aadhar
+from app.forms import RegistrationForm,LoginForm,AadharForm,UploadAadharForm,ForgotForm,UploadPanForm,PanForm
+from app.models import User,Aadhar,Pan
 from flask_login import login_user,current_user,logout_user,login_required
 import app.mod_ocr.aad_ocr as ado
 import app.mod_ocr.aadA_ocr as ada
+import app.mod_ocr.pan_ocr as pan
 import os
 from werkzeug import secure_filename
 from flask_login import login_user,current_user,logout_user
@@ -15,8 +16,8 @@ import random
 
 # APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 # UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static/uploads')
-# UPLOAD_FOLDER = os.path.basename('./uploads/')
-# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+UPLOAD_FOLDER = os.path.basename('./uploads/')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['TESTING']=False
 
 client=nexmo.Client(key='d6ab2286', secret='2StTxLOOxYq5OaxF')
@@ -108,10 +109,6 @@ def uploadaadhar():
     if form.validate_on_submit():
         f=form.photo.data
         fa=form.addphoto.data
-        # filename=secure_filename(f.filename)
-        # addfile=secure_filename(fa.filename)
-        # f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-        # fa.save(os.path.join(app.config['UPLOAD_FOLDER'],addfile))
 
 
         Name,Middle_Name,Surname,bdate,Gender,aadnum=ado.scan(f.filename)
@@ -129,26 +126,58 @@ def uploadaadhar():
 
 
 
-# @app.route("/pancard",methods=['GET','POST'])
-# def pancard():
-#     form = PanForm() 
-#     if form.validate_on_submit():
-#         f=form.photo.data
-#         filename=secure_filename(f.filename)
-#         f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+@app.route("/uploadpancard",methods=['GET','POST'])
+def uploadpancard():
+    form = UploadPanForm() 
+    if form.validate_on_submit():
+        f=form.photo.data
+        filename=secure_filename(f.filename)
+        f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
 
 
-#         Name,Middle_Name,Surname,Father,bdate,panno=pan.scan_pan(f.filename)
-#         bdate=datetime.datetime.strptime('30-01-12', '%d-%m-%y').date()
-#         hashpan=bcrypt.generate_password_hash(panno).decode('utf-8')
-#         user=Pan(fname=Name,mname=Middle_Name,lname=Surname,birthday=bdate,panno=hashaad,user_id=current_user.id)
-#         db.session.add(user)
-#         db.session.commit()
-#         flash(f'kyc done successfully !', 'success')
-#         return redirect(url_for('pan_edit'))
-#     else:
-#         print(form.errors)
-#     return render_template('pancard.html', title='PanCard', form=form)
+
+        Name,Middle_Name,Surname,Father,bdate,panno=pan.scan_pan(f.filename)
+        user=Pan(fname=Name,mname=Middle_Name,lname=Surname,father=Father,birthday=bdate,panno=panno,user_id=current_user.id)
+        db.session.add(user)
+        db.session.commit()
+        flash(f'kyc done successfully !', 'success')
+        return redirect(url_for('pancard',user_id=current_user.id))
+    else:
+        print(form.errors)
+    return render_template('uploadpan.html', title='PanCard', form=form)
+
+@app.route("/pancard/<int:user_id>/edit",methods=['GET','POST'])
+def pancard(user_id):
+    # user_id=current_user.id
+    aad= Pan.query.get_or_404(user_id)
+
+    form=PanForm()
+
+    if form.validate_on_submit():
+        aad.fname=form.fname.data
+        aad.mname=form.mname.data
+        aad.lname=form.lname.data
+        aad.father=form.father.data
+        aad.birthday=form.birthday.data
+        aad.panno=form.panno.data
+        db.session.commit()
+
+        flash(f'Your pan card details are updated!', 'success')
+        return redirect(url_for('viewpan',user_id=current_user.id))
+    else:
+        print(form.errors)
+    return render_template('pancard.html',title='pancard', form=form,fname=aad.fname,
+    lname=aad.lname,
+    mname=aad.mname,
+    father=aad.father,
+    birthday=aad.birthday,
+    panno=aad.panno)
+
+@app.route("/pancard/<int:user_id>/view")
+def viewpan(user_id):
+    aad= Pan.query.get_or_404(user_id)
+
+    return render_template('viewpan.html',title='viewpan',fname=aad.fname,mname=aad.mname,lname=aad.lname)
 
 # @app.route("/voterid",methods=['GET','POST'])
 # def voter():

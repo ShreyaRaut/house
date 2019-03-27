@@ -47,13 +47,18 @@ class AadharForm(FlaskForm):
     adno=StringField('Aadhar No',validators=[DataRequired(),Length(min=12,max=12)])
     submit = SubmitField('Submit')
 
+class UploadPanForm(FlaskForm):
+    photo=FileField('Details',validators=[FileRequired()])
+    submit = SubmitField('Upload')
+
+
 class PanForm(FlaskForm):
     fname = StringField('First Name',validators=[DataRequired(), Length(min=2, max=20)])
     mname = StringField('Middle Name',validators=[Length(min=2, max=20)])
     lname = StringField('Last name',validators=[Length(min=2, max=20)])
     father=StringField('Father\'s Name',validators=[Length(min=5,max=100)])
-    birthday= DateTimeField('Date of Birth', format='%d/%m/%y')
-    panno=StringField('Pancard No',validators=[DataRequired(),Length(min=12,max=12)])
+    birthday= StringField('Date of Birth', validators=[Length(max=10)])
+    panno=StringField('Pancard No',validators=[DataRequired(),Length(min=10,max=10)])
     submit = SubmitField('Submit')
 
 class VoterForm(FlaskForm):
