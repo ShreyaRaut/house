@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 from skimage.filters.rank import median
 from skimage.morphology import disk
 
-def scan_vote(file):
+def scan_driver(file):
     img =cv2.imread('dri2.jpg')
     img = cv2.resize(img, None, fx=1.5, fy=1.5, interpolation=cv2.INTER_CUBIC)
     # img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -157,7 +157,7 @@ def scan_vote(file):
     # print(aad)
     # print('\n\n')
     #Form the aadhar number
-    aadnum=' '.join(aad)
+    dlno=' '.join(aad)
     # print(""+aadnum)
 
 
@@ -184,4 +184,4 @@ def scan_vote(file):
     # print('Name:'+Name)
     # print('Middle name:'+Middle_Name)
     # print('Surname:'+Surname)
-    return name,add,dlno,dov,dob
+    return name,add,DL_no,dov,dob

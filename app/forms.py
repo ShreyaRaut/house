@@ -74,24 +74,32 @@ class VoterForm(FlaskForm):
     voterno=StringField('Voter No',validators=[DataRequired(),Length(min=10,max=10)])
     submit = SubmitField('Submit')
 
+class UploadDriverForm(FlaskForm):
+    photo=FileField('Details',validators=[FileRequired()])
+    submit = SubmitField('Upload')
+
 class DriverForm(FlaskForm):
     name = StringField('First Name',validators=[DataRequired(), Length(min=2, max=20)])
-    birthday= DateTimeField('Date of Birth', format='%d/%m/%y')
+    birthday= StringField('Date of Birth', validators=[Length(max=10)])
     address=StringField('Address',validators=[Length(min=5,max=100)])
-    dov= DateTimeField('Date of Issue', format='%d/%m/%y')
+    dov= StringField('Date of Issue', validators=[Length(max=10)])
     dlno=StringField('Driving License No',validators=[DataRequired(),Length(min=12,max=12)])
     submit = SubmitField('Submit')
 
-class PassportForm(FlaskForm):
-    fname = StringField('First Name',validators=[DataRequired(), Length(min=2, max=20)])
-    lname = StringField('Last name',validators=[Length(min=2, max=20)])
-    nationality=StringField('Nationality',validators=[Length(min=5,max=100)])
-    gender = StringField('Gender',validators=[Length(min=1, max=1)])
-    birthday= DateTimeField('Date of Birth', format='%d/%m/%y')
-    placeofbirth=StringField('Place of Birth',validators=[Length(min=5,max=100)])
-    doi= DateTimeField('Date of Issue', format='%d/%m/%y')
-    passportno=StringField('Passport No',validators=[DataRequired(),Length(min=12,max=12)])
-    submit = SubmitField('Submit')
+# class UploadPassForm(FlaskForm):
+#     photo=FileField('Details',validators=[FileRequired()])
+#     submit = SubmitField('Upload')
+
+# class PassportForm(FlaskForm):
+#     fname = StringField('First Name',validators=[DataRequired(), Length(min=2, max=20)])
+#     lname = StringField('Last name',validators=[Length(min=2, max=20)])
+#     nationality=StringField('Nationality',validators=[Length(min=5,max=100)])
+#     gender = StringField('Gender',validators=[Length(min=1, max=1)])
+#     birthday= StringField('Date of Birth', validators=[Length(max=10)])
+#     placeofbirth=StringField('Place of Birth',validators=[Length(min=5,max=100)])
+#     doi= StringField('Date of Issue', validators=[Length(max=10)])
+#     passportno=StringField('Passport No',validators=[DataRequired(),Length(min=12,max=12)])
+#     submit = SubmitField('Submit')
 
 class ForgotForm(FlaskForm):
     username=StringField('User Name',validators=[DataRequired()])
@@ -102,7 +110,6 @@ class ChooseForm(FlaskForm):
     choice_b = SubmitField('Pan Card')
     choice_c = SubmitField('Voters Id')
     choice_d = SubmitField('Driving License')
-    choice_e = SubmitField('Passport')
 
 
     

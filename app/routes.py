@@ -1,13 +1,14 @@
 from flask import Flask,render_template,request,session,logging,url_for,redirect,flash
 from app import app, db, bcrypt
-from app.forms import RegistrationForm,LoginForm,AadharForm,UploadAadharForm,ForgotForm,UploadPanForm,PanForm,ChooseForm,UploadVoterForm,VoterForm
-from app.models import User,Aadhar,Pan,Voter
+from app.forms import RegistrationForm,LoginForm,AadharForm,UploadAadharForm,ForgotForm,UploadPanForm,PanForm,ChooseForm,UploadVoterForm,VoterForm,UploadDriverForm,DriverForm
+from app.models import User,Aadhar,Pan,Voter,Driving
 from flask_login import login_user,current_user,logout_user,login_required
 import app.mod_ocr.aad_ocr as ado
 import app.mod_ocr.aadA_ocr as ada
 import app.mod_ocr.pan_ocr as pan
 import app.mod_ocr.vote_ocr as vote
 import app.mod_ocr.voteA_ocr as votea
+import app.mod_ocr.dri_ocr as driv
 import os
 from werkzeug import secure_filename
 from flask_login import login_user,current_user,logout_user
@@ -73,7 +74,10 @@ def login():
 @app.route("/aadhar/<int:user_id>/edit",methods=['GET','POST'])
 def aadhar(user_id):
     # user_id=current_user.id
-    aad= Aadhar.query.get_or_404(user_id)
+    reqid=User.query.get_or_404(user_id)
+    aadid=reqid.aadhar[1]
+    print("Hey there:"+str(aadid))
+    aad= Aadhar.query.get_or_404(aadid)
 
     form=AadharForm()
 
@@ -265,6 +269,62 @@ def viewvote(user_id):
     aad= Voter.query.get_or_404(user_id)
 
     return render_template('viewvote.html',title='viewvote',fname=aad.fname,mname=aad.mname,lname=aad.lname)
+
+@app.route("/uploaddriver",methods=['GET','POST'])
+def uploaddriver():
+    form = UploadDriverForm() 
+    if form.validate_on_submit():
+        f=form.photo.data
+        filename=secure_filename(f.filename)
+        f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+
+        Name,Address,dlno,dov,dob=driv.scan_driver(f.filename)
+        # hashvote=bcrypt.generate_password_hash(voterno).decode('utf-8')
+        user=Driving(name=Name,address=Address,dlno=dlno,dov=dov,birthday=dob,user_id=current_user.id)
+        db.session.add(user)
+        db.session.commit()
+        flash(f'kyc done successfully !', 'success')
+        return redirect(url_for('driver',user_id=current_user.id))
+    else:
+        vot=User.query.get_or_404(current_user.id)
+        driver=vot.driver
+        if len(driver)!=0:
+            flash(f'Your driving license  is already registered ','success')
+            return redirect(url_for('driver',user_id=current_user.id))
+        else:
+            print(form.errors)
+    return render_template('uploaddriver.html', title='uploaddriver', form=form)
+
+@app.route("/driver/<int:user_id>/edit",methods=['GET','POST'])
+def driver(user_id):
+    # user_id=current_user.id
+    aad= Driving.query.get_or_404(user_id)
+
+    form=DriverForm()
+
+    if form.validate_on_submit():
+        aad.name=form.name.data
+        aad.birthday=form.birthday.data
+        aad.address=form.address.data
+        aad.dlno=form.dlno.data
+        aad.dov=form.dov.data
+        db.session.commit()
+
+        flash(f'Your driving license details are updated!', 'success')
+        return redirect(url_for('viewdriver',user_id=current_user.id))
+    else:
+        print(form.errors)
+    return render_template('driving.html',title='driver', form=form,name=aad.name,
+    birthday=aad.birthday,
+    address=aad.address,
+    dlno=aad.dlno,
+    dov=aad.dov)
+
+@app.route("/driver/<int:user_id>/view")
+def viewdriver(user_id):
+    aad= Driving.query.get_or_404(user_id)
+
+    return render_template('viewdriver.html',title='viewdriver',name=aad.name)
 
 # @app.route("/drivinglicense",methods=['GET','POST'])
 # def driver():

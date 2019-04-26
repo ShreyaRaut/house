@@ -7,67 +7,21 @@
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">ekyc</legend>
                 <div class="form-group">
-                    {{ form.fname.label(class="form-control-label") }}
+                    {{ form.name.label(class="form-control-label") }}
 
-                    {% if form.fname.errors %}
-                        {{ form.fname(class="form-control form-control-lg is-invalid") }}
+                    {% if form.name.errors %}
+                        {{ form.name(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
-                            {% for error in form.fname.errors %}
+                            {% for error in form.name.errors %}
                                 <span>{{ error }}</span>
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.fname(class="form-control form-control-lg") }}
+                        {{ form.name(class="form-control form-control-lg", value=name) }}
                     {% endif %}
                 </div>
 
-                <div class="form-group">
-                    {{ form.mname.label(class="form-control-label") }}
-
-                    {% if form.mname.errors %}
-                        {{ form.mname(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.mname.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.mname(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-
-
-                <div class="form-group">
-                    {{ form.lname.label(class="form-control-label") }}
-
-                    {% if form.lname.errors %}
-                        {{ form.lname(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.lname.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.lname(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    {{ form.father.label(class="form-control-label") }}
-
-                    {% if form.father.errors %}
-                        {{ form.father(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.father.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.father(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-
-                
+            
 
                 <div class="form-group">
                     {{ form.birthday.label(class="form-control-label") }}
@@ -79,37 +33,7 @@
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.birthday(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-
-
-                <div class="form-group">
-                    {{ form.blood.label(class="form-control-label") }}
-
-                    {% if form.blood.errors %}
-                        {{ form.blood(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.blood.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.blood(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    {{ form.doi.label(class="form-control-label") }}
-                    {% if form.doi.errors %}
-                        {{ form.doi(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.doi.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.doi(class="form-control form-control-lg") }}
+                        {{ form.birthday(class="form-control form-control-lg",value=birthday) }}
                     {% endif %}
                 </div>
 
@@ -123,7 +47,7 @@
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.address(class="form-control form-control-lg") }}
+                        {{ form.address(class="form-control form-control-lg",value=address) }}
                     {% endif %}
                 </div>
 
@@ -137,15 +61,31 @@
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.dlno(class="form-control form-control-lg") }}
+                        {{ form.dlno(class="form-control form-control-lg",value=dlno) }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.dov.label(class="form-control-label") }}
+                    {% if form.dov.errors %}
+                        {{ form.dov(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.dov.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.dov(class="form-control form-control-lg",value=dov) }}
                     {% endif %}
                 </div>
                 
+
+
+
             </fieldset>
             <div class="form-group">
                 {{ form.submit(class="btn btn-outline-info") }}
             </div>
         </form>
     </div>
-
 {% endblock content %}
